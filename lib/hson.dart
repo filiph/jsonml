@@ -46,6 +46,7 @@ void _encodeNode(Node node, _IndentedStringBuffer out, {bool last: false}) {
 
 void _outputElementDescriptor(Element element, _IndentedStringBuffer out) {
   out.write("[\"${element.tagName}\"");
+  // TODO: output classes (as list), id, title as JSON map at end of descriptor.
   // Output classes.
   if (element.attributes.containsKey("class")) {
     out.writeRaw(", \"${element.attributes["class"]}\"");

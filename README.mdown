@@ -1,0 +1,33 @@
+# HSON
+
+**HSON** is HTML in JSON form. It's useful for sending rich text over AJAX --- it is designed to be **quick to parse** by the client side and **safe**.
+
+## Problem
+
+More and more of the text on the web is sent over AJAX calls and displayed programatically on the client via JavaScript/Dart/whatever. When rich text is needed (i.e. text with _emphasis_, **bold** typefaces, [links](http://www.example.com) and more), it is often sent as HTML. That HTML is then either parsed on the client (slow), or it pasted into the DOM verbatim via `innerHTML` (unsafe).
+
+## Solution
+
+Inspired by Frederik Braun's [html2dom][], HSON is a way to represent rich text in a way that is as close as possible to what the client side (the browser) needs.
+
+1. It's JSON, and therefore it is inexpensive to parse. (As opposed to, say, an HTML string.)
+2. It's JSON, and therefore a little bit less verbose than HTML.
+3. It's a list (array) of elements, and so it's pre-formatted for fast DOM building on the client side.
+4. It's made so that there is no need to ever touch the unsafe `innerHTML` setter.
+5. Semantically, it's a (validated) subset of HTML which doesn't allow unsafe things like `javascript:` in HREF. Therefore, it is ready for user-generated input.
+6. Although less verbose and focused on speed, it still retains some readability.
+7. It comes with an easy-to-use library/tooling in [Dart][]. It's trivial to build libraries and tools in other languages, too.
+
+## Example use
+
+
+## Example HSON
+
+
+
+## Definition
+
+HSON ('HTML Save over JSON') is a semantically a subset of HTML and syntactically valid JSON.
+
+[html2dom]: http://blog.mozilla.org/security/2013/09/24/introducing-html2dom-an-alternative-to-setting-innerhtml/
+[Dart]: http://www.dartlang.org/
