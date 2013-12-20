@@ -1,6 +1,6 @@
 #JsonML for Dart
 
-This is an implementation of JsonML in Dart. JsonML is a way to avoid the verbosity and expensiveness of XML/HTML on one hand, and the unsafeness and inflexibility of `innerHTML` on the other hand.
+This is an implementation of [JsonML][] in Dart. JsonML is a way to avoid the verbosity and expensiveness of XML/HTML on one hand, and the unsafeness and inflexibility of `innerHTML` on the other hand.
 
 ## The JsonML class
 
@@ -16,7 +16,86 @@ Given valid HTML5, this part of the library will created JsonML.
 
 ## Save JsonML
 
-I am thinking of providing a way to generate JsonML that only allows safe 
+I am thinking of providing a way to generate JsonML that only allows safe tags and attributes. (No `<script>` tags, no `href="javascript:..."` and so on.) 
+
+## Micro-JsonML
+
+Marrying the concept of JsonML with the author's original idea of HSON, there is still room to create a much less flexible, but also less verbose and more performant version of the markup language. In this version, there would only be a limited amount of possible tags and attributes (even more limited than Save JsonML above). In general, only the basic HTML elements like `<p>`, `<a>`, `<strong>`, `<table>` etc. would be supported, and those elements could only have `class`es, `id`s, `title`s, and &mdash; when appropriate &mdash; `src`s and `href`s.
+
+Consider this JsonML:
+
+    ["ul",
+    	["li",
+    		{ "style" : "color:red" },
+    		"First Item"
+    	],
+    	["li",
+    		{
+    			"title" : "Some hover text.",
+    			"style" : "color:green"
+    		},
+    		"Second Item"
+    	],
+    	["li",
+    		["span",
+    			{
+    				"class" : "Remove-Me",
+    				"style" : "font-weight:bold"
+    			},
+    			"Not Filtered"
+    		],
+    		" Item"
+    	],
+    	["li",
+    		["a",
+    			{
+    				"href" : "#NewWindow"
+    			},
+    			"Special Link"
+    		]
+    	]
+    ]
+
+In Micro-JsonML, it would be written like this:
+
+    [50,
+    	[51,
+    		"First Item"
+    	],
+    	[51,
+    		{
+    			"t" : "Some hover text."
+    		},
+    		"Second Item"
+    	],
+    	[51,
+    		[10,
+    			{
+    				"c" : "Remove-Me"
+    			},
+    			"Not Filtered"
+    		],
+    		" Item"
+    	],
+    	[51,
+    		[4,
+    			{
+    				"h" : "#NewWindow"
+    			},
+    			"Special Link"
+    		]
+    	]
+    ]
+
+(In reality, the result would be even less verbose, as most of the time, the data sent carries much less styling. Not to mention the whitespace, of course.)
+
+Note that the inline `style` information is lost. Also note the numbers, which should be less expensive to work with.
+
+A user should still have the possibility to register `customMarkup` hooks.
+
+
+
+[JsonML]: http://www.jsonml.org/
 
 ---
 
