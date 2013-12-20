@@ -1,3 +1,29 @@
+#JsonML for Dart
+
+This is an implementation of JsonML in Dart. JsonML is a way to avoid the verbosity and expensiveness of XML/HTML on one hand, and the unsafeness and inflexibility of `innerHTML` on the other hand.
+
+## The JsonML class
+
+JsonML can be seen as nothing more than a (recursive) List (= Array in JavaScript). Therefore, the JsonML class extends List and only provides a couple of helpers on top of it. 
+
+## JsonML-to-DOM
+
+This part of the library takes a JsonML object (or just List) containing HTML nodes and creates their DOM representation. Using `customMarkup` callbacks, the user can use a superset of HTML.
+
+## HTML-to-JsonML
+
+Given valid HTML5, this part of the library will created JsonML.
+
+## Save JsonML
+
+I am thinking of providing a way to generate JsonML that only allows safe 
+
+---
+
+# History
+
+This project started as "HSON" before the author realized this idea can't be original &mdash; and of course it wasn't! And JsonML probably makes more sense than the original (slightly less verbose but also less flexible) markup. The original README is left here for the sake of software archeologists.
+
 # HSON
 
 **HSON** is HTML in JSON. It's useful for sending rich text over AJAX &mdash; it is designed to be **quick to parse** by the client side and **safe**.
