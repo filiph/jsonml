@@ -1,6 +1,7 @@
-name: hson
-description: HTML Safe over JSON
+name: jsonml
+description: JsonML in Dart
 dependencies:
   html5lib: 0.9.1
-dev_dependencies:  
+  browser: 0.9.1
+dev_dependencies:
   unittest: any
