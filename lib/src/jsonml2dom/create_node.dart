@@ -25,24 +25,44 @@ Node _createNode(Object jsonMLObject,
       return customTags[tagName](jsonMLObject);
     }
     Element element;
+    DocumentFragment documentFragment;
     if (tagName == "svg" || svg) {
       // SVG elements are different, need another constructor.
       element = new SvgElement.tag(tagName);
       svg = true;
+    } else if (tagName == "") {
+      documentFragment = new DocumentFragment();
     } else {
       element = new Element.tag(tagName);
     }
     if (jsonMLObject.length > 1) {
       int i = 1;
       if (jsonMLObject[1] is Map) {
-        element.attributes = jsonMLObject[1];
+        if (element != null) {
+          element.attributes = jsonMLObject[1];
+        } else {
+          assert(documentFragment != null);
+          throw new JsonMLFormatException("DocumentFragment cannot have "
+              "attributes. Value of currently encoded JsonML object: "
+              "'$jsonMLObject'");
+        }
         i++;
       }
       for (; i < jsonMLObject.length; i++) {
-        element.append(_createNode(jsonMLObject[i], unsafe: unsafe, svg: svg));
+        Node newNode = _createNode(jsonMLObject[i], unsafe: unsafe, svg: svg);
+        if (element != null) {
+          element.append(newNode);
+        } else {
+          documentFragment.append(newNode);
+        }
       }
     }
-    node = element;
+    if (element != null) {
+      node = element;
+    } else {
+      assert(documentFragment != null);
+      node = documentFragment;
+    }
   } else {
     throw new JsonMLFormatException("Unexpected JsonML object. Objects in "
         "JsonML can be either Strings, Lists, or Maps (and Maps can be only "
