@@ -1,14 +1,51 @@
 #JsonML for Dart
 
-This is an implementation of [JsonML][] in Dart. JsonML is a way to avoid the verbosity and expensiveness of XML/HTML on one hand, and the unsafeness and inflexibility of `innerHTML` on the other hand.
+This is an implementation of [JsonML][] in Dart.
 
-## The JsonML class
+JsonML is useful whenever you are sending HTML to the client from a server or from an Isolate. Instead of sending HTML (which needs to be parsed and, ideally, sanitized), you are sending a lossless representation of it in JSON format.
 
-JsonML can be seen as nothing more than a (recursive) List (= Array in JavaScript). Therefore, the JsonML class extends List and only provides a couple of helpers on top of it. 
+## Example
+
+Converting HTML to JsonML is easy.
+
+    import "package:jsonml/html2jsonml.dart";
+
+    var jsonml = encode("<h1>Title</h1><p>First paragraph.</p><p>Second paragraph.</p>");
+
+The object can be then JSONified by calling `JSON.encode()` of the standard `dart:convert` library.
+
+In the browser, here is how one can append the contents of the JsonML object to a div.
+
+    import "package:jsonml/jsonml2dom.dart";
+
+    var destination = querySelector("div#destination");
+    var node = jsonml2dom(jsonml, unsafe: true);
+    destination.append(node);
+
+The `jsonml2dom` function takes an object. For convenience, one can also use `jsonmlString2dom`, which takes a String.
+
+Note the `unsafe: true` optional attribute. When the `unsafe` optional argument is `true`, the JsonML object will be copied to the DOM verbatim, including potentially insecure tags like `<script>` and attributes like `href`. In safe mode (`unsafe == false`) the potentially dangerous content would be stripped before creating the DOM nodes. This is not implemented yet, so **the user must currently always specify `unsafe: true`**. This is to ensure that the unsafeness is explicit in the code.
+
+## Security
+
+As mentioned before, the library currently doesn't employ any stripping of potentially unsecure tags and attributes. This is made explicit by forcing the user to provide the optional argument `unsafe: true`. As ironic as it sounds (forcing an optional argument), it's important to be clear about this. No user content
+should ever be sent to DOM via jsonml2dom (or via innerHtml, for that matter).
+
+In the future, when `unsafe == false`, the library will take care of stripping anything that could be malicious (in the same way as the Dart standard library's `innerHtml` does already). This isn't yet implemented.
+
+## Speed
+
+The repo contains a benchmark harness. It measures the speed with which the browser can go from a String representation of the DOM to the actual elements, and compares HTML+innerHtml with JsonML+this library.
+
+In my limited testing, it seems that shorter structured text can easily be **twice as fast (Dartium 2.2x, dart2js Chrome 1.9x) to parse and render** with JsonML than with innerHtml. With longer and less structured text, the performance gain diminishes. Parsing and rendering of [this article][benchmarkArticle] is negligibly faster with JsonML (Dartium 1.05x), but still a good 40% faster when compiled to JavaScript (dart2js Chrome 1.4x).
+
+Even more performance is gained by skipping string parsing. This is not doable with HTML (there is no non-string representation of HTML in Dart/JavaScript), but easy with JsonML (JsonML object is just a list of lists, maps and strings). When working with JsonML objects (List) instead of JsonML strings, the library can easily be 2-4 times faster than innerHtml.
+
+The speed of encoding from HTML to JsonML is not measure (at the moment) since performance there doesn't tend to be an issue (this is normally executed only once and on the server, not on clients).
 
 ## JsonML-to-DOM
 
-This part of the library takes a JsonML object (or just List) containing HTML nodes and creates their DOM representation. Using `customMarkup` callbacks, the user can use a superset of HTML.
+This part of the library takes a JsonML object (or just List) containing HTML nodes and creates their DOM representation. Using `customTag` hooks, the user can use a superset of HTML.
 
 ## HTML-to-JsonML
 
@@ -171,3 +208,4 @@ HSON ('HTML Save over JSON') is a semantically a subset of HTML and syntacticall
 
 [html2dom]: http://blog.mozilla.org/security/2013/09/24/introducing-html2dom-an-alternative-to-setting-innerhtml/
 [Dart]: http://www.dartlang.org/
+[benchmarkArticle]: http://pub.dartlang.org/doc/package-layout.html
