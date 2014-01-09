@@ -22,7 +22,7 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   // Not measured setup code executed prior to the benchmark runs.
   void setup() { 
     destination = querySelector("div#destination");
-    jsonml = encode("<p id='main'><a href='http://www.example.com/'>This</a> is <em><strong>very</strong></em> interesting.</p>");
+    jsonml = encode("<p id='main'><a href='#'>This</a> is <em><strong>very</strong></em> interesting.</p>");
   }
 
   // Not measures teardown code executed after the benchark runs.
@@ -49,7 +49,7 @@ class InnerHtmlBenchmark extends BenchmarkBase {
   // Not measured setup code executed prior to the benchmark runs.
   void setup() { 
     destination = querySelector("div#destination");
-    html = "<p id='main'><a href='http://www.example.com/'>This</a> is <em><strong>very</strong></em> interesting.</p>";
+    html = "<p id='main'><a href='#'>This</a> is <em><strong>very</strong></em> interesting.</p>";
   }
 
   // Not measures teardown code executed after the benchark runs.
