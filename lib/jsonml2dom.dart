@@ -4,58 +4,48 @@ import "dart:html";
 import "dart:svg";
 import "dart:convert";
 
-Node jsonmlString2dom(String jsonml) => jsonml2dom(JSON.decode(jsonml));
+part 'src/jsonml2dom/create_node.dart';
 
-Node jsonml2dom(List jsonmlList) {
-  return _createNode(jsonmlList);
+/**
+ * Takes an JsonML object (not [String] JSON, but the decoded object, most 
+ * often a [List]) and returns the DOM [Node] it specifies. This works 
+ * recursively, so a whole page structure can be created this way.
+ * 
+ * Example usage:
+ * 
+ *     var content = JSON.decode(jsonString);
+ *     querySelector("#content").append(jsonml2dom(content, unsafe: true));
+ *    
+ * When the [unsafe] optional argument is [:true:], the JsonML object will be
+ * copied to the DOM verbatim, including potentially insecure tags like
+ * [:<script>:] and attributes like [:href:]. In safe mode ([:unsafe == false:])
+ * the potentially dangerous content would be stripped before creating the DOM
+ * nodes. This is not implemented yet, so **the user must currently always
+ * specify [:unsafe: true:]**. This is to ensure that the unsafeness is explicit
+ * in the code.
+ * 
+ * The other optional argument, [customTags], allows the user to specify custom
+ * handlers. When a tag is found in the input [jsonml] that is specified (as a
+ * key) in [customTags], the provided function will be called. For example,
+ * if [:customTags = {"myElement": (el) => new PElement()}:], then every
+ * occurenct of [:myElement:] as a tag would produce an empty [:<p>:] element.
+ */
+Node jsonml2dom(Object jsonml, 
+                {bool unsafe: false, 
+                 Map<String,CustomTagHandler> customTags: null}) {
+  return _createNode(jsonml, unsafe: unsafe, customTags: customTags);
 }
 
-Node _createNode(Object jsonMLObject, {bool svg: false}) {
-  Node node;
-  if (jsonMLObject is String) {
-    node = new Text(jsonMLObject);
-  } else if (jsonMLObject is List) {
-    assert(jsonMLObject[0] is String || jsonMLObject[0] == null);
-    String tagName = jsonMLObject[0];
-    Element element;
-    DocumentFragment documentFragment;
-    if (tagName == "svg" || svg) {
-      // SVG elements are different, need another constructor.
-      element = new SvgElement.tag(tagName);
-      svg = true;
-    } else if (tagName == null) {
-      documentFragment = document.createDocumentFragment();
-    } else {
-      element = new Element.tag(tagName);
-    }
-    if (jsonMLObject.length > 1) {
-      int i = 1;
-      if (jsonMLObject[1] is Map) {
-        if (element != null) {
-          element.attributes = jsonMLObject[1];
-        }
-        i++;
-      }
-      for (; i < jsonMLObject.length; i++) {
-        if (element != null) {
-          element.append(_createNode(jsonMLObject[i], svg: svg));
-        } else if (documentFragment != null) {
-          documentFragment.append(_createNode(jsonMLObject[i], svg: svg));
-        }
-      }
-    }
-    if (element != null) {
-      node = element;
-    } else if (documentFragment != null) {
-      node = documentFragment;
-    }
-  } else {
-    throw new JsonMLFormatException("Bad HSON");
-  }
-  return node;
-}
+/**
+ * Utility function that takes a JSON [String], decodes it and then calls
+ * [jsonml2dom] on the resulting object.
+ */
+Node jsonmlString2dom(String jsonml, 
+                      {bool unsafe: false, 
+                       Map<String,CustomTagHandler> customTags: null}) => 
+      jsonml2dom(JSON.decode(jsonml), unsafe: unsafe, customTags: customTags);
 
-class JsonMLFormatException implements Exception {
-  String message;
-  JsonMLFormatException(this.message);
-}
+/**
+ * Function definition for custom tag handlers.
+ */
+typedef Node CustomTagHandler(Object jsonMLObject);

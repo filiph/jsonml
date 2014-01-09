@@ -2,3 +2,6 @@
 pubspec.lock
 packages
 **/packages
+*.js
+*.js.deps
+*.js.map

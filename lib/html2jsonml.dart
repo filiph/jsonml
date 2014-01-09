@@ -3,43 +3,15 @@ library html2jsonml;
 import 'package:html5lib/parser.dart' show parseFragment;
 import 'package:html5lib/dom.dart';
 
+part 'src/html2jsonml/encode.dart';
+
 /**
- * Default encoder.
+ * Takes a valid HTML5 string, parses it (via the html5lib library) and
+ * encodes the resulting tree as JsonML. Returns the JsonML [Object] (usually
+ * a [List]). This object is guaranteed to be a valid input for 
+ * [:JSON.encode():].
  */
-List encode(String html) {
+Object encode(String html) {
   DocumentFragment tree = parseFragment(html);
   return _encodeNode(tree);
-}
-
-Object _encodeNode(Node node) {
-  if (node is Document) {
-    // We got the document fragment.
-    assert(node.nodes.length == 1);
-    return _encodeNode(node.nodes[0]);
-  }
-  
-  if (node is Text /* TEXT_NODE */) {
-    return node.value;
-  } else if (node is Element) {
-    List output = new List(1 + (node.attributes.isNotEmpty ? 1 : 0) +
-        node.nodes.length);
-    output[0] = node.tagName;
-    int i = 1;
-    if (node.attributes.isNotEmpty) {
-      // The following code ensures that the attribute map is <String,String>.
-      // Otherwise, we could just assign output[i] = node.attributes;
-      Map<String,String> attr = new Map<String,String>();
-      node.attributes.forEach((key, value) {
-        attr["$key"] = value;
-      });
-      output[i] = attr;
-      i++;
-    }
-    for (int nodeIndex = 0; nodeIndex < node.nodes.length; i++, nodeIndex++) {
-      output[i] = _encodeNode(node.nodes[nodeIndex]);
-    }
-    return output;
-  } else {
-    throw new Exception("Couldn't encode node: $node");
-  }
 }
