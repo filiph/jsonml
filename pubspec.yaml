@@ -1,5 +1,7 @@
 name: jsonml
-description: JsonML in Dart
+version: 0.1.0
+description: JsonML for Dart
+author: Filip Hracek <filip.hracek@gmail.com>
 dependencies:
   html5lib: 0.9.1
   browser: 0.9.1
