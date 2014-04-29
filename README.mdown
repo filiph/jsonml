@@ -38,12 +38,12 @@ For more information about the format, including formal specs and examples of us
 
 ## Example
 
-Converting HTML to JsonML is easy.
+Note: See examples in `example/` to get the full picture.
 
 ```dart
 import "package:jsonml/html2jsonml.dart";
 
-var jsonml = encode("<h1>Title</h1><p>First paragraph.</p><p>Second paragraph.</p>");
+var jsonml = encodeToJsonML("<h1>Title</h1><p>First paragraph.</p><p>Second paragraph.</p>");
 ```
 
 The object can be then stringified by calling `JSON.encode()` of the standard `dart:convert` library.
@@ -53,11 +53,11 @@ In the browser, here is how one can append the contents of the JsonML object to 
 ```dart
 import "package:jsonml/jsonml2dom.dart";
 
-var node = jsonml2dom(jsonml, unsafe: true);
+var node = decodeToDom(jsonml, unsafe: true);
 querySelector("#destination").append(node);
 ```
 
-The `jsonml2dom` function takes an Object. For convenience, one can also use `jsonmlString2dom`, which takes a String (which it then decodes using the standard JSON library).
+The `decodeToDom` function takes an Object. For convenience, one can also use `decodeStringToDom`, which takes a String (which it then decodes using the standard JSON library).
 
 Note the `unsafe: true` optional attribute. When the `unsafe` optional argument is `true`, the JsonML object will be copied to the DOM verbatim, including potentially insecure tags like `<script>` and attributes like `href`. In safe mode (`unsafe == false`) the potentially dangerous content would be stripped before creating the DOM nodes. This is not implemented yet, so **the user must currently always specify `unsafe: true`**. This ensures that the unsafeness is explicit in the code.
 
