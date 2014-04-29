@@ -4,9 +4,17 @@ import "dart:html";
 import "dart:svg";
 import "dart:convert";
 
-Node jsonmlString2dom(String jsonml) => jsonml2dom(JSON.decode(jsonml));
+/**
+ * Takes the JsonML JSON [String] (not object), decodes it, and converts to
+ * a DOM [Node].
+ */
+Node decodeStringToDom(String jsonml) => decodeToDom(JSON.decode(jsonml));
 
-Node jsonml2dom(List jsonmlList) {
+/**
+ * Takes the JsonML JSON object and creates a new DOM [Node] from it, ready to
+ * be inserted onto the page.  
+ */
+Node decodeToDom(List jsonmlList) {
   return _createNode(jsonmlList);
 }
 
