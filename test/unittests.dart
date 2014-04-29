@@ -18,5 +18,15 @@ main() {
             "very"],
           " interesting."]"""));      
     });
+    
+    test("DocumentFragment", () {
+      var list = encodeToJsonML("<h1>Title</h1><p>First paragraph.</p><p>Second paragraph.</p>");
+      expect(JSON.encode(list), r"""["",["h1","Title"],["p","First paragraph."],["p","Second paragraph."]]""");
+    });
+    
+    test("HTML + SVG", () {
+      var list = encodeToJsonML("""<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>""");
+      expect(JSON.encode(list), """["svg",{"width":"100","height":"100"},["circle",{"cx":"50","cy":"50","r":"40","stroke":"green","stroke-width":"4","fill":"yellow"}]]""");
+    });
   });
 }
