@@ -3,6 +3,7 @@ library jsonml2dom;
 import "dart:html";
 import "dart:svg";
 import "dart:convert";
+import "src/exception.dart";
 
 part 'src/jsonml2dom/create_node.dart';
 
