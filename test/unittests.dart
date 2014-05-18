@@ -30,6 +30,11 @@ main() {
       expect(JSON.encode(list), """["svg",{"width":"100","height":"100"},["circle",{"cx":"50","cy":"50","r":"40","stroke":"green","stroke-width":"4","fill":"yellow"}]]""");
     });
     
+    test("throws on unknown tag, undefined with customtags", () {
+      expect(() => decodeToHtml5Lib(JSON.decode(r"""["",["NON_EXISTENT_TAG","Title"],["p","First paragraph."],["p","Second paragraph."]]"""), unsafe: true),
+          throwsA(new isInstanceOf<JsonMLFormatException>()));
+    });
+    
     test("CustomTags", () {
       var list = encodeToJsonML(r"""<h1>A normal tag</h1><p>Followed by a paragraph with a <special>custom tag</special>.""");
       bool customTagRan = false;

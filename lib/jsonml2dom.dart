@@ -4,6 +4,7 @@ import "dart:html";
 import "dart:svg";
 import "dart:convert";
 import "src/exception.dart";
+import 'src/constants.dart';
 
 part 'src/jsonml2dom/create_node.dart';
 

@@ -2,6 +2,8 @@ library jsonml2html5lib;
 
 import 'package:html5lib/dom.dart' as html5lib;
 import 'src/exception.dart';
+export 'src/exception.dart';
+import 'src/constants.dart';
 
 /**
  * Almost exact copy of jsonml2dom, but with html5lib 'virtual' DOM elements.
@@ -22,7 +24,8 @@ html5lib.Node decodeToHtml5Lib(Object jsonml, {bool unsafe: false, Map<String,
 typedef html5lib.Node CustomTagHandler(Object jsonMLObject);
 
 html5lib.Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
-    CustomTagHandler> customTags: null, bool svg: false}) {
+    CustomTagHandler> customTags: null, bool svg: false, bool 
+    allowUnknownTags: false}) {
   if (unsafe == false) {
     throw new UnimplementedError("Safe operation (no script tags, etc.) is "
         "not supported yet. Currently, you _must_ specify `unsafe: true`. "
@@ -45,6 +48,10 @@ html5lib.Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
     if (tagName == "") {
       documentFragment = new html5lib.DocumentFragment();
     } else {
+      if (!allowUnknownTags && !VALID_TAGS.contains(tagName)) {
+        throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
+            "nor is it defined in customTags.");
+      }
       element = new html5lib.Element.tag(tagName);
     }
     if (jsonMLObject.length > 1) {

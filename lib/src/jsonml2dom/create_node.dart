@@ -4,7 +4,8 @@ part of jsonml2dom;
  * The workhorse function.
  */
 Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
-    CustomTagHandler> customTags: null, bool svg: false}) {
+    CustomTagHandler> customTags: null, bool svg: false, bool 
+    allowUnknownTags: false}) {
   if (unsafe == false) {
     throw new UnimplementedError("Safe operation (no script tags, etc.) is "
         "not supported yet. Currently, you _must_ specify `unsafe: true`. "
@@ -31,6 +32,10 @@ Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
     } else if (tagName == "") {
       documentFragment = new DocumentFragment();
     } else {
+      if (!allowUnknownTags && !VALID_TAGS.contains(tagName)) {
+        throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
+            "nor is it defined in customTags.");
+      }
       element = new Element.tag(tagName);
     }
     if (jsonMLObject.length > 1) {
