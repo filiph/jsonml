@@ -20,9 +20,6 @@ Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
   } else if (jsonMLObject is List) {
     assert(jsonMLObject[0] is String);
     String tagName = jsonMLObject[0];
-    if (customTags != null && customTags.containsKey(tagName)) {
-      return customTags[tagName](jsonMLObject);
-    }
     Element element;
     DocumentFragment documentFragment;
     if (tagName == "svg" || svg) {
@@ -32,11 +29,15 @@ Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
     } else if (tagName == "") {
       documentFragment = new DocumentFragment();
     } else {
-      if (!allowUnknownTags && !VALID_TAGS.contains(tagName)) {
+      if (customTags != null && customTags.containsKey(tagName)) {
+        element = customTags[tagName](jsonMLObject);
+      } else if (!allowUnknownTags && 
+          !VALID_TAGS.contains(tagName.toLowerCase())) {
         throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
             "nor is it defined in customTags.");
+      } else {
+        element = new Element.tag(tagName);
       }
-      element = new Element.tag(tagName);
     }
     if (jsonMLObject.length > 1) {
       int i = 1;

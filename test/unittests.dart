@@ -2,6 +2,7 @@
 import "package:unittest/unittest.dart";
 import "package:jsonml/html2jsonml.dart";
 import "package:jsonml/jsonml2html5lib.dart";
+import "package:html5lib/dom.dart" as html5lib;
 import "dart:convert" show JSON;
 
 main() {
@@ -41,6 +42,7 @@ main() {
       var output = decodeToHtml5Lib(list, unsafe: true, 
           customTags: { "special" : (jsonObject) {
             customTagRan = true;
+            return new html5lib.Element.tag("strong");
           }
         }
       );
