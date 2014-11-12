@@ -8,14 +8,14 @@ Object _encodeNode(Node node) {
     // Skip encoding DocumentFragment if all it has is one child node.
     node = node.nodes[0];
   }
-  
+
   if (node is Text /* TEXT_NODE */) {
-    return node.value;
+    return node.text;
   } else if (node is Element || node is DocumentFragment) {
     List output = new List(1 + (node.attributes.isNotEmpty ? 1 : 0) +
         node.nodes.length);
     if (node is Element) {
-      output[0] = node.tagName;
+      output[0] = node.localName;
     } else {
       // DocumentFragment is represented with an empty string 'tag name'.
       // See http://blog.livedoor.jp/aki_mana/archives/6814310.html.
