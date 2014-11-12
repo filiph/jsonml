@@ -15,7 +15,7 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   // The benchmark code.
   void run() {
     destination.nodes.clear();
-    destination.append(jsonml2dom(jsonml, unsafe: true));
+    destination.append(decodeToDom(jsonml, unsafe: true));
   }
 
   final String html;
@@ -25,7 +25,7 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   // Not measured setup code executed prior to the benchmark runs.
   void setup() { 
     destination = querySelector("div#destination");
-    jsonml = encode(html);
+    jsonml = encodeToJsonML(html);
   }
 }
 
@@ -35,7 +35,7 @@ class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   
   void run() {
     destination.children.clear();
-    destination.append(jsonmlString2dom(jsonmlJson, unsafe: true));
+    destination.append(decodeStringToDom(jsonmlJson, unsafe: true));
     
   }
   
@@ -45,7 +45,7 @@ class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   
   void setup() { 
     destination = querySelector("div#destination");
-    var jsonml = encode(html);
+    var jsonml = encodeToJsonML(html);
     jsonmlJson = JSON.encode(jsonml);
   }
 }

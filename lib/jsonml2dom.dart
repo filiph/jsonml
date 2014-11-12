@@ -3,6 +3,8 @@ library jsonml2dom;
 import "dart:html";
 import "dart:svg";
 import "dart:convert";
+import "src/exception.dart";
+import 'src/constants.dart';
 
 part 'src/jsonml2dom/create_node.dart';
 
@@ -30,7 +32,7 @@ part 'src/jsonml2dom/create_node.dart';
  * if [:customTags = {"myElement": (el) => new PElement()}:], then every
  * occurenct of [:myElement:] as a tag would produce an empty [:<p>:] element.
  */
-Node jsonml2dom(Object jsonml, 
+Node decodeToDom(Object jsonml, 
                 {bool unsafe: false, 
                  Map<String,CustomTagHandler> customTags: null}) {
   return _createNode(jsonml, unsafe: unsafe, customTags: customTags);
@@ -38,12 +40,12 @@ Node jsonml2dom(Object jsonml,
 
 /**
  * Utility function that takes a JSON [String], decodes it and then calls
- * [jsonml2dom] on the resulting object.
+ * [decodeToDom] on the resulting object.
  */
-Node jsonmlString2dom(String jsonml, 
+Node decodeStringToDom(String jsonml, 
                       {bool unsafe: false, 
                        Map<String,CustomTagHandler> customTags: null}) => 
-      jsonml2dom(JSON.decode(jsonml), unsafe: unsafe, customTags: customTags);
+      decodeToDom(JSON.decode(jsonml), unsafe: unsafe, customTags: customTags);
 
 /**
  * Function definition for custom tag handlers.

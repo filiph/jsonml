@@ -1,6 +1,7 @@
 name: jsonml
-version: 0.1.1
-description: JsonML for Dart
+description: Library for converting to and from JsonML.
+homepage: https://github.com/filiph/jsonml
+version: 0.1.5
 author: Filip Hracek <filip.hracek@gmail.com>
 dependencies:
   html5lib: ">=0.12.0 <0.13.0"
