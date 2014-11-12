@@ -21,29 +21,28 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   final String html;
   DivElement destination;
   List jsonml;
-  
+
   // Not measured setup code executed prior to the benchmark runs.
-  void setup() { 
+  void setup() {
     destination = querySelector("div#destination");
     jsonml = encodeToJsonML(html);
   }
 }
 
 class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
-  JsonML2DOMWithJsonDecodeBenchmark(String name, this.html) 
+  JsonML2DOMWithJsonDecodeBenchmark(String name, this.html)
   : super("JsonML2DOMWithJsonDecode<$name>");
-  
+
   void run() {
     destination.children.clear();
     destination.append(decodeStringToDom(jsonmlJson, unsafe: true));
-    
   }
-  
+
   final String html;
   DivElement destination;
   String jsonmlJson;
-  
-  void setup() { 
+
+  void setup() {
     destination = querySelector("div#destination");
     var jsonml = encodeToJsonML(html);
     jsonmlJson = JSON.encode(jsonml);
@@ -61,9 +60,9 @@ class InnerHtmlBenchmark extends BenchmarkBase {
 
   final String html;
   DivElement destination;
-  
+
   // Not measured setup code executed prior to the benchmark runs.
-  void setup() { 
+  void setup() {
     destination = querySelector("div#destination");
   }
 }
@@ -79,10 +78,10 @@ void _runAllWithSameInput(String name, String input) {
   // Unfair to really compare, since this doesn't parse anything. But still
   // good to see the speedup.
   _runAndReturnScore(new JsonML2DOMBenchmark(name, input));
-  num jsonmlStringScore = 
+  num jsonmlStringScore =
       _runAndReturnScore(new JsonML2DOMWithJsonDecodeBenchmark(name, input));
   num innerhtmlScore = _runAndReturnScore(new InnerHtmlBenchmark(name, input));
-  
+
   print("Speedup of JsonML versus innerHtml is "
       "${innerhtmlScore / jsonmlStringScore}x "
       "(${(((innerhtmlScore / jsonmlStringScore) - 1) * 100).toInt()}% "
@@ -92,13 +91,13 @@ void _runAllWithSameInput(String name, String input) {
 main() {
   // Short and structured HTML.
   _runAllWithSameInput("Short", shortHtml);
-  
+
   // Long and not so tightly structured (resembles normal web page content).
   // _runAllWithSameInput("Long", longHtml);
-  
+
   // Same as above, but doesn't force innerHtml to print all the warning
   // messages (comparison is much more fair here).
-  _runAllWithSameInput("LongSafe", 
+  _runAllWithSameInput("LongSafe",
       longHtml.replaceAll(new RegExp(r'''http://.+?"'''), '#"'));
-  
+
 }

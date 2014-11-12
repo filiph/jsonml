@@ -10,6 +10,6 @@ const List<String> VALID_TAGS = const ["a", "address", "annotation-xml",
     "iframe", "image", "img", "input", "isindex", "li", "link", "listing",
     "marquee", "men", "meta", "mi", "mn", "mo", "ms", "mtext", "nav", "nobr",
     "noembed", "noframes", "noscript", "object", "ol", "p", "param", "plaintext",
-    "pre", "s", "script", "section", "select", "small", "strike", "strong", "style",
+    "pre", "s", "script", "section", "select", "small", "span", "strike", "strong", "style",
     "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "title", "tr", "tt",
     "ul", "wbr", "xmp"];
