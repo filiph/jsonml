@@ -1,7 +1,7 @@
 part of benchmark;
 
 String shortHtml = "<p id='main'><a href='#'>This</a> is "
-"<em><strong>very</strong></em> interesting.</p>";
+    "<em><strong>very</strong></em> interesting.</p>";
 
 String longHtml = r"""
 <h1>Package layout conventions</h1>

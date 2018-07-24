@@ -3,9 +3,11 @@ part of jsonml2dom;
 /**
  * The workhorse function.
  */
-Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
-    CustomTagHandler> customTags: null, bool svg: false, bool 
-    allowUnknownTags: false}) {
+Node _createNode(Object jsonMLObject,
+    {bool unsafe: false,
+    Map<String, CustomTagHandler> customTags: null,
+    bool svg: false,
+    bool allowUnknownTags: false}) {
   if (unsafe == false) {
     throw new UnimplementedError("Safe operation (no script tags, etc.) is "
         "not supported yet. Currently, you _must_ specify `unsafe: true`. "
@@ -31,7 +33,7 @@ Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
     } else {
       if (customTags != null && customTags.containsKey(tagName)) {
         element = customTags[tagName](jsonMLObject);
-      } else if (!allowUnknownTags && 
+      } else if (!allowUnknownTags &&
           !VALID_TAGS.contains(tagName.toLowerCase())) {
         throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
             "nor is it defined in customTags.");
@@ -43,17 +45,18 @@ Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
       int i = 1;
       if (jsonMLObject[1] is Map) {
         if (element != null) {
-          element.attributes = jsonMLObject[1];
+          element.attributes = (jsonMLObject[1] as Map).cast<String,String>();
         } else {
           assert(documentFragment != null);
           throw new JsonMLFormatException("DocumentFragment cannot have "
-              "attributes. Value of currently encoded JsonML object: " "'$jsonMLObject'");
+              "attributes. Value of currently encoded JsonML object: "
+              "'$jsonMLObject'");
         }
         i++;
       }
-      for ( ; i < jsonMLObject.length; i++) {
-        Node newNode = _createNode(jsonMLObject[i], unsafe: unsafe,
-            svg: svg, customTags: customTags);
+      for (; i < jsonMLObject.length; i++) {
+        Node newNode = _createNode(jsonMLObject[i],
+            unsafe: unsafe, svg: svg, customTags: customTags);
         if (newNode == null) {
           continue; // Some custom tag handlers can choose not to output
           // elements.

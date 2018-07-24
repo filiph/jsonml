@@ -1,5 +1,7 @@
 #JsonML for Dart
 
+[![Build Status](https://travis-ci.org/filiph/jsonml.svg?branch=master)](https://travis-ci.org/filiph/jsonml)
+
 This is an implementation of [JsonML][] in Dart.
 
 JsonML is useful whenever you are sending HTML to the client from a server (or from an Isolate). Instead of sending the HTML string (which needs to be parsed and, ideally, sanitized), you are sending a lossless representation of it in JSON format.
@@ -71,9 +73,9 @@ In the future, when `unsafe == false`, the library will take care of stripping a
 
 The repo contains a benchmark harness. It measures the speed with which the browser can go from a String representation of the DOM to the actual elements, and compares HTML+innerHtml with JsonML+this library.
 
-Not surprisingly, JsonML fares better in terms of speed than HTML. In my limited testing, it seems that shorter structured text can easily be twice as fast (Dartium 2.2x, dart2js Chrome 1.9x) to parse and render with JsonML than with innerHtml. With longer and less structured text, the performance gain diminishes. In Dart, parsing and rendering of [a longer article][benchmarkArticle] is only negligibly faster with JsonML (Dartium 1.05x). When compiled to JavaScript, though, it is still a good 40% faster (dart2js Chrome 1.4x).
+Not surprisingly, JsonML fares better in terms of speed than HTML. In my limited testing, it seems that shorter structured text can easily be twice as fast (Chrome 2.8x) to parse and render with JsonML than with innerHtml. With longer and less structured text, the performance gain diminishes but is still significant. Parsing and rendering of [a longer article][benchmarkArticle] is a good 70% faster (Chrome 1.7x).
 
-Even more performance is gained by skipping String parsing. This is not doable with HTML (there is no non-string representation of HTML in Dart/JavaScript), but easy with JsonML (JsonML object is just a list of lists, maps and strings). When working with JsonML objects (List) instead of JsonML strings, the library can easily be 2-4 times faster than innerHtml.
+Even more performance is gained by skipping String parsing. This is not doable with HTML (there is no non-string representation of HTML in Dart/JavaScript), but easy with JsonML (JsonML object is just a list of lists, maps and strings). When working with JsonML objects (List) instead of JsonML strings, the library can easily be 3 times faster than innerHtml.
 
 The speed of encoding from HTML to JsonML is not measured (at the moment) since performance there doesn't tend to be an issue (this is normally executed only once and on the server, not on clients).
 

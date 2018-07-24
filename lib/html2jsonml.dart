@@ -1,8 +1,9 @@
 library html2jsonml;
 
-import 'package:html5lib/parser.dart' show parseFragment;
+import 'package:html/dom.dart';
+import 'package:html/parser.dart' show parseFragment;
+
 import 'html5lib2jsonml.dart' as html5lib show encodeToJsonML;
-import 'package:html5lib/dom.dart';
 
 /**
  * Takes a valid HTML5 [String], parses it (via the html5lib library) and

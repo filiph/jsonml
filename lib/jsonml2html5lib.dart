@@ -1,6 +1,6 @@
 library jsonml2html5lib;
 
-import 'package:html5lib/dom.dart' as html5lib;
+import 'package:html/dom.dart' as html5lib;
 import 'src/exception.dart';
 export 'src/exception.dart';
 import 'src/constants.dart';
@@ -16,16 +16,18 @@ import 'src/constants.dart';
  * code between json2html5lib and json2dom.
  */
 
-html5lib.Node decodeToHtml5Lib(Object jsonml, {bool unsafe: false, Map<String,
-    CustomTagHandler> customTags: null}) {
+html5lib.Node decodeToHtml5Lib(Object jsonml,
+    {bool unsafe: false, Map<String, CustomTagHandler> customTags: null}) {
   return _createNode(jsonml, unsafe: unsafe, customTags: customTags);
 }
 
 typedef html5lib.Node CustomTagHandler(Object jsonMLObject);
 
-html5lib.Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
-    CustomTagHandler> customTags: null, bool svg: false, bool 
-    allowUnknownTags: false}) {
+html5lib.Node _createNode(Object jsonMLObject,
+    {bool unsafe: false,
+    Map<String, CustomTagHandler> customTags: null,
+    bool svg: false,
+    bool allowUnknownTags: false}) {
   if (unsafe == false) {
     throw new UnimplementedError("Safe operation (no script tags, etc.) is "
         "not supported yet. Currently, you _must_ specify `unsafe: true`. "
@@ -47,7 +49,7 @@ html5lib.Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
     } else {
       if (customTags != null && customTags.containsKey(tagName)) {
         element = customTags[tagName](jsonMLObject);
-      } else if (!allowUnknownTags && 
+      } else if (!allowUnknownTags &&
           !VALID_TAGS.contains(tagName.toLowerCase())) {
         throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
             "nor is it defined in customTags.");
@@ -63,16 +65,17 @@ html5lib.Node _createNode(Object jsonMLObject, {bool unsafe: false, Map<String,
         } else {
           assert(documentFragment != null);
           throw new JsonMLFormatException("DocumentFragment cannot have "
-              "attributes. Value of currently encoded JsonML object: " "'$jsonMLObject'");
+              "attributes. Value of currently encoded JsonML object: "
+              "'$jsonMLObject'");
         }
         i++;
       }
-      for ( ; i < jsonMLObject.length; i++) {
-        html5lib.Node newNode = _createNode(jsonMLObject[i], unsafe: unsafe,
-            svg: svg, customTags: customTags);
+      for (; i < jsonMLObject.length; i++) {
+        html5lib.Node newNode = _createNode(jsonMLObject[i],
+            unsafe: unsafe, svg: svg, customTags: customTags);
         if (newNode == null) {
-          continue;  // Some custom tag handlers can choose not to output 
-                     // elements.
+          continue; // Some custom tag handlers can choose not to output
+          // elements.
         }
         if (element != null) {
           element.append(newNode);

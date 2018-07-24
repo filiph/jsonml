@@ -2,7 +2,7 @@ library benchmark;
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import "dart:html";
-import "dart:convert" show JSON;
+import "dart:convert" show jsonEncode;
 
 import "package:jsonml/html2jsonml.dart";
 import "package:jsonml/jsonml2dom.dart";
@@ -31,7 +31,7 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
 
 class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   JsonML2DOMWithJsonDecodeBenchmark(String name, this.html)
-  : super("JsonML2DOMWithJsonDecode<$name>");
+      : super("JsonML2DOMWithJsonDecode<$name>");
 
   void run() {
     destination.children.clear();
@@ -45,7 +45,7 @@ class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   void setup() {
     destination = querySelector("div#destination");
     var jsonml = encodeToJsonML(html);
-    jsonmlJson = JSON.encode(jsonml);
+    jsonmlJson = jsonEncode(jsonml);
   }
 }
 
@@ -97,7 +97,6 @@ main() {
 
   // Same as above, but doesn't force innerHtml to print all the warning
   // messages (comparison is much more fair here).
-  _runAllWithSameInput("LongSafe",
-      longHtml.replaceAll(new RegExp(r'''http://.+?"'''), '#"'));
-
+  _runAllWithSameInput(
+      "LongSafe", longHtml.replaceAll(new RegExp(r'''http://.+?"'''), '#"'));
 }

@@ -32,9 +32,8 @@ part 'src/jsonml2dom/create_node.dart';
  * if [:customTags = {"myElement": (el) => new PElement()}:], then every
  * occurenct of [:myElement:] as a tag would produce an empty [:<p>:] element.
  */
-Node decodeToDom(Object jsonml, 
-                {bool unsafe: false, 
-                 Map<String,CustomTagHandler> customTags: null}) {
+Node decodeToDom(Object jsonml,
+    {bool unsafe: false, Map<String, CustomTagHandler> customTags: null}) {
   return _createNode(jsonml, unsafe: unsafe, customTags: customTags);
 }
 
@@ -42,10 +41,9 @@ Node decodeToDom(Object jsonml,
  * Utility function that takes a JSON [String], decodes it and then calls
  * [decodeToDom] on the resulting object.
  */
-Node decodeStringToDom(String jsonml, 
-                      {bool unsafe: false, 
-                       Map<String,CustomTagHandler> customTags: null}) => 
-      decodeToDom(JSON.decode(jsonml), unsafe: unsafe, customTags: customTags);
+Node decodeStringToDom(String jsonml,
+        {bool unsafe: false, Map<String, CustomTagHandler> customTags: null}) =>
+    decodeToDom(jsonDecode(jsonml), unsafe: unsafe, customTags: customTags);
 
 /**
  * Function definition for custom tag handlers.
