@@ -45,7 +45,7 @@ Node _createNode(Object jsonMLObject,
       int i = 1;
       if (jsonMLObject[1] is Map) {
         if (element != null) {
-          element.attributes = (jsonMLObject[1] as Map).cast<String,String>();
+          element.attributes = (jsonMLObject[1] as Map).cast<String, String>();
         } else {
           assert(documentFragment != null);
           throw new JsonMLFormatException("DocumentFragment cannot have "

@@ -3,7 +3,7 @@ description: >
   Library for converting to and from JsonML. Can display JsonML in the DOM
   and can convert JsonML to and from HTML representations.
 homepage: https://github.com/filiph/jsonml
-version: 0.1.8
+version: 0.1.8+1
 author: Filip Hracek <filip.hracek@gmail.com>
 
 environment:
