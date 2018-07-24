@@ -6,7 +6,8 @@ homepage: https://github.com/filiph/jsonml
 version: 0.1.8
 author: Filip Hracek <filip.hracek@gmail.com>
 
-sdk: '>=2.0.0-dev.69.0 <3.0.0'
+environment:
+  sdk: '>=2.0.0-dev.69.0 <3.0.0'
 
 dependencies:
   html: ">=0.13.3+2 <0.14.0"
