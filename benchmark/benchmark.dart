@@ -77,10 +77,10 @@ void _runAllWithSameInput(String name, String input) {
   print("=== Running all benchmarks with input type $name. ===");
   // Unfair to really compare, since this doesn't parse anything. But still
   // good to see the speedup.
-  _runAndReturnScore(new JsonML2DOMBenchmark(name, input));
+  _runAndReturnScore(JsonML2DOMBenchmark(name, input));
   num jsonmlStringScore =
-      _runAndReturnScore(new JsonML2DOMWithJsonDecodeBenchmark(name, input));
-  num innerhtmlScore = _runAndReturnScore(new InnerHtmlBenchmark(name, input));
+      _runAndReturnScore(JsonML2DOMWithJsonDecodeBenchmark(name, input));
+  num innerhtmlScore = _runAndReturnScore(InnerHtmlBenchmark(name, input));
 
   print("Speedup of JsonML versus innerHtml is "
       "${innerhtmlScore / jsonmlStringScore}x "
@@ -98,5 +98,5 @@ main() {
   // Same as above, but doesn't force innerHtml to print all the warning
   // messages (comparison is much more fair here).
   _runAllWithSameInput(
-      "LongSafe", longHtml.replaceAll(new RegExp(r'''http://.+?"'''), '#"'));
+      "LongSafe", longHtml.replaceAll(RegExp(r'''http://.+?"'''), '#"'));
 }

@@ -51,7 +51,7 @@ main() {
       var _ = decodeToHtml5Lib(list, unsafe: true, customTags: {
         "special": (jsonObject) {
           customTagRan = true;
-          return new html5lib.Element.tag("strong");
+          return html5lib.Element.tag("strong");
         }
       });
       expect(customTagRan, true);

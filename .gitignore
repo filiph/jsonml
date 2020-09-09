@@ -6,3 +6,5 @@ pubspec.lock
 *.js
 *.js.deps
 *.js.map
+
+.idea

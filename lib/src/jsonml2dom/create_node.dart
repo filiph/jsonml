@@ -1,15 +1,13 @@
 part of jsonml2dom;
 
-/**
- * The workhorse function.
- */
+/// The workhorse function.
 Node _createNode(Object jsonMLObject,
-    {bool unsafe: false,
-    Map<String, CustomTagHandler> customTags: null,
-    bool svg: false,
-    bool allowUnknownTags: false}) {
+    {bool unsafe = false,
+    Map<String, CustomTagHandler> customTags = null,
+    bool svg = false,
+    bool allowUnknownTags = false}) {
   if (unsafe == false) {
-    throw new UnimplementedError("Safe operation (no script tags, etc.) is "
+    throw UnimplementedError("Safe operation (no script tags, etc.) is "
         "not supported yet. Currently, you _must_ specify `unsafe: true`. "
         "In the future, the default operation will be in safe mode "
         "(unsafe: false), which will strip all tags and attributes that "
@@ -18,7 +16,7 @@ Node _createNode(Object jsonMLObject,
   }
   Node node;
   if (jsonMLObject is String) {
-    node = new Text(jsonMLObject);
+    node = Text(jsonMLObject);
   } else if (jsonMLObject is List) {
     assert(jsonMLObject[0] is String);
     String tagName = jsonMLObject[0];
@@ -26,19 +24,19 @@ Node _createNode(Object jsonMLObject,
     DocumentFragment documentFragment;
     if (tagName == "svg" || svg) {
       // SVG elements are different, need another constructor.
-      element = new SvgElement.tag(tagName);
+      element = SvgElement.tag(tagName);
       svg = true;
     } else if (tagName == "") {
-      documentFragment = new DocumentFragment();
+      documentFragment = DocumentFragment();
     } else {
       if (customTags != null && customTags.containsKey(tagName)) {
         element = customTags[tagName](jsonMLObject);
       } else if (!allowUnknownTags &&
           !VALID_TAGS.contains(tagName.toLowerCase())) {
-        throw new JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
+        throw JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
             "nor is it defined in customTags.");
       } else {
-        element = new Element.tag(tagName);
+        element = Element.tag(tagName);
       }
     }
     if (jsonMLObject.length > 1) {
@@ -48,7 +46,7 @@ Node _createNode(Object jsonMLObject,
           element.attributes = (jsonMLObject[1] as Map).cast<String, String>();
         } else {
           assert(documentFragment != null);
-          throw new JsonMLFormatException("DocumentFragment cannot have "
+          throw JsonMLFormatException("DocumentFragment cannot have "
               "attributes. Value of currently encoded JsonML object: "
               "'$jsonMLObject'");
         }
@@ -75,7 +73,7 @@ Node _createNode(Object jsonMLObject,
       node = documentFragment;
     }
   } else {
-    throw new JsonMLFormatException("Unexpected JsonML object. Objects in "
+    throw JsonMLFormatException("Unexpected JsonML object. Objects in "
         "JsonML can be either Strings, Lists, or Maps (and Maps can be only "
         "on second positions in Lists, and can be only <String,String>). "
         "The faulty object is of runtime type ${jsonMLObject.runtimeType} "

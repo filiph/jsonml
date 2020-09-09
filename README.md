@@ -1,5 +1,3 @@
-#JsonML for Dart
-
 [![Build Status](https://travis-ci.org/filiph/jsonml.svg?branch=master)](https://travis-ci.org/filiph/jsonml)
 
 This is an implementation of [JsonML][] in Dart.
@@ -92,6 +90,6 @@ As an aside: this project started as "HSON" (HTML over JSON) before I realized t
 
 
 [JsonML]: http://www.jsonml.org/
-[html2dom]: http://blog.mozilla.org/security/2013/09/24/introducing-html2dom-an-alternative-to-setting-innerhtml/
-[Dart]: http://www.dartlang.org/
-[benchmarkArticle]: http://pub.dartlang.org/doc/package-layout.html
+[html2dom]: https://blog.mozilla.org/security/2013/09/24/introducing-html2dom-an-alternative-to-setting-innerhtml/
+[Dart]: https://dart.dev/
+[benchmarkArticle]: https://dart.dev/tools/pub/package-layout

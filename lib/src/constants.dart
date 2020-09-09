@@ -1,7 +1,7 @@
 library jsonml_constants;
 
 /// Tags valid for HTML5 and SVG and MathML.
-const List<String> VALID_TAGS = const [
+const List<String> VALID_TAGS = [
   "a",
   "address",
   "annotation-xml",
