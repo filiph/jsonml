@@ -3,7 +3,7 @@ part of jsonml2dom;
 /// The workhorse function.
 Node _createNode(Object jsonMLObject,
     {bool unsafe = false,
-    Map<String, CustomTagHandler> customTags = null,
+    Map<String, CustomTagHandler> customTags,
     bool svg = false,
     bool allowUnknownTags = false}) {
   if (unsafe == false) {
@@ -19,7 +19,7 @@ Node _createNode(Object jsonMLObject,
     node = Text(jsonMLObject);
   } else if (jsonMLObject is List) {
     assert(jsonMLObject[0] is String);
-    String tagName = jsonMLObject[0];
+    var tagName = jsonMLObject[0] as String;
     Element element;
     DocumentFragment documentFragment;
     if (tagName == "svg" || svg) {
@@ -30,7 +30,7 @@ Node _createNode(Object jsonMLObject,
       documentFragment = DocumentFragment();
     } else {
       if (customTags != null && customTags.containsKey(tagName)) {
-        element = customTags[tagName](jsonMLObject);
+        element = customTags[tagName](jsonMLObject) as Element;
       } else if (!allowUnknownTags &&
           !VALID_TAGS.contains(tagName.toLowerCase())) {
         throw JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
@@ -40,7 +40,7 @@ Node _createNode(Object jsonMLObject,
       }
     }
     if (jsonMLObject.length > 1) {
-      int i = 1;
+      var i = 1;
       if (jsonMLObject[1] is Map) {
         if (element != null) {
           element.attributes = (jsonMLObject[1] as Map).cast<String, String>();
@@ -53,7 +53,7 @@ Node _createNode(Object jsonMLObject,
         i++;
       }
       for (; i < jsonMLObject.length; i++) {
-        Node newNode = _createNode(jsonMLObject[i],
+        var newNode = _createNode(jsonMLObject[i],
             unsafe: unsafe, svg: svg, customTags: customTags);
         if (newNode == null) {
           continue; // Some custom tag handlers can choose not to output

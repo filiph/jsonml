@@ -13,6 +13,7 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   JsonML2DOMBenchmark(String name, this.html) : super("JsonML2DOM<$name>");
 
   // The benchmark code.
+  @override
   void run() {
     destination.nodes.clear();
     destination.append(decodeToDom(jsonml, unsafe: true));
@@ -23,9 +24,10 @@ class JsonML2DOMBenchmark extends BenchmarkBase {
   List jsonml;
 
   // Not measured setup code executed prior to the benchmark runs.
+  @override
   void setup() {
-    destination = querySelector("div#destination");
-    jsonml = encodeToJsonML(html);
+    destination = querySelector("div#destination") as DivElement;
+    jsonml = encodeToJsonML(html) as List;
   }
 }
 
@@ -33,6 +35,7 @@ class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   JsonML2DOMWithJsonDecodeBenchmark(String name, this.html)
       : super("JsonML2DOMWithJsonDecode<$name>");
 
+  @override
   void run() {
     destination.children.clear();
     destination.append(decodeStringToDom(jsonmlJson, unsafe: true));
@@ -42,8 +45,9 @@ class JsonML2DOMWithJsonDecodeBenchmark extends BenchmarkBase {
   DivElement destination;
   String jsonmlJson;
 
+  @override
   void setup() {
-    destination = querySelector("div#destination");
+    destination = querySelector("div#destination") as DivElement;
     var jsonml = encodeToJsonML(html);
     jsonmlJson = jsonEncode(jsonml);
   }
@@ -53,6 +57,7 @@ class InnerHtmlBenchmark extends BenchmarkBase {
   InnerHtmlBenchmark(String name, this.html) : super("InnerHtml<$name>");
 
   // The benchmark code.
+  @override
   void run() {
     destination.nodes.clear();
     destination.innerHtml = html;
@@ -62,8 +67,9 @@ class InnerHtmlBenchmark extends BenchmarkBase {
   DivElement destination;
 
   // Not measured setup code executed prior to the benchmark runs.
+  @override
   void setup() {
-    destination = querySelector("div#destination");
+    destination = querySelector("div#destination") as DivElement;
   }
 }
 
@@ -78,9 +84,9 @@ void _runAllWithSameInput(String name, String input) {
   // Unfair to really compare, since this doesn't parse anything. But still
   // good to see the speedup.
   _runAndReturnScore(JsonML2DOMBenchmark(name, input));
-  num jsonmlStringScore =
+  var jsonmlStringScore =
       _runAndReturnScore(JsonML2DOMWithJsonDecodeBenchmark(name, input));
-  num innerhtmlScore = _runAndReturnScore(InnerHtmlBenchmark(name, input));
+  var innerhtmlScore = _runAndReturnScore(InnerHtmlBenchmark(name, input));
 
   print("Speedup of JsonML versus innerHtml is "
       "${innerhtmlScore / jsonmlStringScore}x "
@@ -88,7 +94,7 @@ void _runAllWithSameInput(String name, String input) {
       "faster).");
 }
 
-main() {
+void main() {
   // Short and structured HTML.
   _runAllWithSameInput("Short", shortHtml);
 

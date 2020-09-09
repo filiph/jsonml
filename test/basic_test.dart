@@ -5,7 +5,7 @@ import "package:jsonml/html2jsonml.dart";
 import "package:jsonml/jsonml2html5lib.dart";
 import "package:test/test.dart";
 
-main() {
+void main() {
   group("Encode", () {
     test("basic html", () {
       var list = encodeToJsonML("<p class='blue'><a "
@@ -47,7 +47,7 @@ main() {
     test("CustomTags", () {
       var list = encodeToJsonML(
           r"""<h1>A normal tag</h1><p>Followed by a paragraph with a <special>custom tag</special>.""");
-      bool customTagRan = false;
+      var customTagRan = false;
       var _ = decodeToHtml5Lib(list, unsafe: true, customTags: {
         "special": (jsonObject) {
           customTagRan = true;

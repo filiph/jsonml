@@ -1,5 +1,7 @@
 library jsonml2html5lib;
 
+import 'dart:collection';
+
 import 'package:html/dom.dart' as html5lib;
 import 'src/exception.dart';
 export 'src/exception.dart';
@@ -14,7 +16,7 @@ import 'src/constants.dart';
 /// TODO: Create DomBase library with Node, Text, Element abstract classes. Share
 /// code between json2html5lib and json2dom.
 html5lib.Node decodeToHtml5Lib(Object jsonml,
-    {bool unsafe = false, Map<String, CustomTagHandler> customTags = null}) {
+    {bool unsafe = false, Map<String, CustomTagHandler> customTags}) {
   return _createNode(jsonml, unsafe: unsafe, customTags: customTags);
 }
 
@@ -23,7 +25,7 @@ typedef CustomTagHandler = html5lib.Node Function(Object jsonMLObject);
 
 html5lib.Node _createNode(Object jsonMLObject,
     {bool unsafe = false,
-    Map<String, CustomTagHandler> customTags = null,
+    Map<String, CustomTagHandler> customTags,
     bool svg = false,
     bool allowUnknownTags = false}) {
   if (unsafe == false) {
@@ -39,14 +41,14 @@ html5lib.Node _createNode(Object jsonMLObject,
     node = html5lib.Text(jsonMLObject);
   } else if (jsonMLObject is List) {
     assert(jsonMLObject[0] is String);
-    String tagName = jsonMLObject[0];
+    var tagName = jsonMLObject[0] as String;
     html5lib.Element element;
     html5lib.DocumentFragment documentFragment;
     if (tagName == "") {
       documentFragment = html5lib.DocumentFragment();
     } else {
       if (customTags != null && customTags.containsKey(tagName)) {
-        element = customTags[tagName](jsonMLObject);
+        element = customTags[tagName](jsonMLObject) as html5lib.Element;
       } else if (!allowUnknownTags &&
           !VALID_TAGS.contains(tagName.toLowerCase())) {
         throw JsonMLFormatException("Tag '$tagName' not a valid HTML5 tag "
@@ -56,10 +58,11 @@ html5lib.Node _createNode(Object jsonMLObject,
       }
     }
     if (jsonMLObject.length > 1) {
-      int i = 1;
+      var i = 1;
       if (jsonMLObject[1] is Map) {
         if (element != null) {
-          element.attributes = jsonMLObject[1];
+          element.attributes =
+              jsonMLObject[1] as LinkedHashMap<dynamic, String>;
         } else {
           assert(documentFragment != null);
           throw JsonMLFormatException("DocumentFragment cannot have "
@@ -69,7 +72,7 @@ html5lib.Node _createNode(Object jsonMLObject,
         i++;
       }
       for (; i < jsonMLObject.length; i++) {
-        html5lib.Node newNode = _createNode(jsonMLObject[i],
+        var newNode = _createNode(jsonMLObject[i],
             unsafe: unsafe, svg: svg, customTags: customTags);
         if (newNode == null) {
           continue; // Some custom tag handlers can choose not to output
